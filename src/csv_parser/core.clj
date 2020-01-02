@@ -11,13 +11,13 @@
   (if (nil? pre) 0 (inc pre)))
 
 (defn parse-data []
-  (let [row-1 (nth (get-data) 0)
-        rest (rest (get-data))
+  (let [data (get-data)
+        rest (rest data)
         acc (agent {})]
     (doseq [x rest]
       (let [choices (nth x 4)]
-        (if-let [chs (clojure.string/includes? choices ";")
-                 chss (or (clojure.string/split chs #";") (conj [] choices))]
-          (doseq [x chss]
-            (send acc assoc x custom-inc)))))
+        (if (clojure.string/includes? choices ";")
+          (doseq [y (clojure.string/split choices #";")]
+            (send acc assoc y custom-inc))
+          (send acc assoc choices custom-inc))))
     @acc))
