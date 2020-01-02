@@ -13,11 +13,12 @@
 (defn parse-data []
   (let [data (get-data)
         rest (rest data)
-        acc (agent {})]
-    (doseq [x rest]
-      (let [choices (nth x 4)]
-        (if (clojure.string/includes? choices ";")
-          (doseq [y (clojure.string/split choices #";")]
-            (send acc assoc y custom-inc))
-          (send acc assoc choices custom-inc))))
-    @acc))
+        acc (atom {})]
+    (dosync
+      (doseq [x rest]
+        (let [choices (nth x 4)]
+          (if (clojure.string/includes? choices ";")
+            (doseq [y (clojure.string/split choices #";")]
+              (swap! acc update y custom-inc))
+            (swap! acc update choices custom-inc))))
+      @acc)))
