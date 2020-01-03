@@ -15,4 +15,4 @@
 
 (defn get-groups [path]
   (let [data ((parse-data) path)]
-    (partition 10 10 nil data)))
+    (partition 5 5 nil data)))
